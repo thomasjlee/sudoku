@@ -110,7 +110,7 @@ end
 class Game
   attr_accessor :board, :presenter
 
-  def initialize(file: nil, presenter: Presenter.new)
+  def initialize(file: nil, presenter: Presenter.new, guesses: [])
     if file.nil?
       presenter.start_prompt
     end
@@ -118,7 +118,26 @@ class Game
     @board = Board.new(file, presenter)
     @presenter = presenter
 
-    play_game
+    if guesses.empty?
+      play_game
+    else
+      try_guesses(guesses)
+      play_game
+    end
+  end
+
+  private
+
+  def try_guesses(guesses)
+    guesses.each do |x_y_tile|
+      x    = x_y_tile[0]
+      y    = x_y_tile[1]
+      tile = x_y_tile[2]
+
+      if (presenter.is_valid_coord?(x) && presenter.is_valid_coord?(y) && presenter.is_valid_tile?(tile))
+        board.update(x, y, tile)
+      end
+    end
   end
 
   def play_game
@@ -201,24 +220,32 @@ class Presenter
   end
 
   def validate_coordinate(coord)
-    unless coord.to_s.length == 1 && coord.to_s.ord >= 48 && coord.to_s.ord <= 56
+    unless is_valid_coord?(coord)
       print "Invalid coordinate. Enter a coordinate between 0 and 8: "
       coord = validate_coordinate(gets.chomp)
     end
     coord.to_i
   end
 
-  def prompt_tile_value
-    print "New tile value = "
-    validate_new_value(gets.chomp.to_i)
+  def is_valid_coord?(coord)
+    coord.to_s.length == 1 && coord.to_s.ord >= 48 && coord.to_s.ord <= 56
   end
 
-  def validate_new_value(value)
-    until (value >= 1 && value <= 9)
+  def prompt_tile_value
+    print "New tile value = "
+    validate_tile(gets.chomp.to_i)
+  end
+
+  def validate_tile(tile)
+    until is_valid_tile?(tile)
       print "Please enter an integer between 1 and 9: "
-      value = validate_new_value(gets.chomp.to_i)
+      tile = validate_tile(gets.chomp.to_i)
     end
-    value
+    tile
+  end
+
+  def is_valid_tile?(tile)
+    tile >= 1 && tile <= 9
   end
 
   def unsolved_full_msg
@@ -257,7 +284,7 @@ class MockPresenter
     4
   end
 
-  def validate_new_value;
+  def validate_tile;
   end
 
   def win_msg;
@@ -274,6 +301,9 @@ end
 
 ## Run with sudoku1-almost.txt
 # ruby -w -I. -rsudoku -e "Game.new file: './sudoku1-almost.txt'"
+
+## Run with sudoku1-almost.txt AND winning guess
+# ruby -w -I. -rsudoku -e "Game.new file: './sudoku1-almost.txt', guesses: [[0,8,4]]"
 
 ## Run with sudoku1-almost.txt and MockPresenter for testing
 # ruby -w -I. -rsudoku -e "Game.new file: './sudoku1-almost.txt', presenter: MockPresenter.new"
