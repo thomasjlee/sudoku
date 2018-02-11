@@ -7,7 +7,7 @@ class Tile
   attr_reader :mutable
 
   def initialize(tile)
-    @mutable = tile == "0" ? true : false
+    @mutable = tile == "0"
     @tile = tile == "0" ? "-" : tile
   end
 
@@ -21,12 +21,17 @@ class Tile
 end
 
 class Board
-  attr_reader :presenter, :grid
+  attr_reader :presenter
+  attr_accessor :grid
 
   def initialize(file, presenter)
     @presenter = presenter
     @grid = []
 
+    set_grid(file)
+  end
+
+  def set_grid(file)
     File.open(file) do |f|
       f.each_line do |line|
         tile_row = []
@@ -34,7 +39,7 @@ class Board
           tile_row << Tile.new(tile)
         end
 
-        @grid << tile_row
+        grid << tile_row
       end
     end
   end
@@ -113,16 +118,10 @@ class Game
     @board = Board.new(file, presenter)
     @presenter = presenter
 
-    begin_game
+    play_game
   end
 
-  def begin_game
-    until board.all_solved?
-      play
-    end
-  end
-
-  def play
+  def play_game
     until board.all_solved?
       presenter.render(board.grid)
       x = presenter.prompt_x
@@ -131,6 +130,10 @@ class Game
       board.update(x, y, value)
     end
 
+    end_game
+  end
+
+  def end_game
     presenter.render(board.grid)
     presenter.win_msg
   end
@@ -232,14 +235,38 @@ class Presenter
 end
 
 class MockPresenter
-  def initialize; end
-  def render(mock_grid); end
-  def prompt_x; end
-  def prompt_y; end
-  def validate_coordinate; end
-  def prompt_tile_value; end
-  def validate_new_value; end
-  def win_msg; end
+  def initialize;
+  end
+
+  def render(mock_grid);
+    puts "  +-------+-------+-------+"
+  end
+
+  def prompt_x;
+    0
+  end
+
+  def prompt_y;
+    8
+  end
+
+  def validate_coordinate;
+  end
+
+  def prompt_tile_value;
+    4
+  end
+
+  def validate_new_value;
+  end
+
+  def win_msg;
+    puts "YOU WIN!"
+  end
+end
+
+if $0 == __FILE__ then
+  puts "The game would be loaded"
 end
 
 ## Allow puzzle selection
