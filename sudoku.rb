@@ -161,7 +161,6 @@ end
 class Presenter
   def start_prompt
     puts "=== SUDOKU ==="
-    puts ""
     puts "sudoku1-almost.txt"
     puts "sudoku1-solved.txt"
     puts "sudoku1.txt"
@@ -169,15 +168,13 @@ class Presenter
     puts "sudoku3.txt"
     puts "sudoku4.txt"
     puts ""
-    print "Type in the complete puzzle file name: "
+    print "Choose a puzzle. Type in the complete file name: "
     file = gets.chomp
     Game.new(file: "#{file}", presenter: Presenter.new)
   end
 
   def render(grid)
-    # sleep(0.1)
     puts ""
-
     div_placer = 0
     v_spacer = " | "
     v_count = 8
@@ -193,8 +190,8 @@ class Presenter
 
       puts "  +-------+-------+-------+" if div_placer == 0
 
-      render_left = render_row[0..2].join(" ")
-      render_mid = render_row[3..5].join(" ")
+      render_left  = render_row[0..2].join(" ")
+      render_mid   = render_row[3..5].join(" ")
       render_right = render_row[6..8].join(" ")
 
       puts v_count.to_s.colorize(:blue) + v_spacer + render_left + v_spacer + render_mid + v_spacer + render_right + v_spacer
@@ -204,6 +201,7 @@ class Presenter
 
       puts "  +-------+-------+-------+" if div_placer % 3 == 0
     end
+
     puts "    0 1 2   3 4 5   6 7 8".colorize(:blue)
     puts ""
     return nil
@@ -261,49 +259,12 @@ class Presenter
   end
 end
 
-class MockPresenter
-  def initialize;
-  end
-
-  def render(mock_grid);
-    puts "  +-------+-------+-------+"
-  end
-
-  def prompt_x;
-    0
-  end
-
-  def prompt_y;
-    8
-  end
-
-  def validate_coordinate;
-  end
-
-  def prompt_tile_value;
-    4
-  end
-
-  def validate_tile;
-  end
-
-  def win_msg;
-    puts "YOU WIN!"
-  end
-end
-
 if $0 == __FILE__ then
-  puts "The game would be loaded"
+  Game.new
 end
-
-## Allow puzzle selection
-# ruby -w -I. -rsudoku -e "Presenter.start_prompt"
 
 ## Run with sudoku1-almost.txt
 # ruby -w -I. -rsudoku -e "Game.new file: './sudoku1-almost.txt'"
 
-## Run with sudoku1-almost.txt AND winning guess
-# ruby -w -I. -rsudoku -e "Game.new file: './sudoku1-almost.txt', guesses: [[0,8,4]]"
-
-## Run with sudoku1-almost.txt and MockPresenter for testing
-# ruby -w -I. -rsudoku -e "Game.new file: './sudoku1-almost.txt', presenter: MockPresenter.new"
+## Run with sudoku1-almost.txt and winning guess
+# ruby -w -I. -rsudoku -e "Game.new file: './sudoku1-almost.txt', guesses: [[0, 8, 4]]"
