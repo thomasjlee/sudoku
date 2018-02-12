@@ -1,5 +1,3 @@
-require 'pry'
-require 'byebug'
 require 'colorize'
 
 class Tile

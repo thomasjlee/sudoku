@@ -59,3 +59,21 @@ describe Game do
     end
   end
 end
+
+describe "Mocking" do
+  describe "a game with one unsolved tile" do
+    before do
+      @MockPresenter = Minitest::Mock.new
+      def @MockPresenter.render(grid); end
+      def @MockPresenter.prompt_x; 0 end
+      def @MockPresenter.prompt_y; 8 end
+      def @MockPresenter.prompt_tile_value; 4 end
+      def @MockPresenter.win_msg; end
+
+      Game.new(
+        file: 'test/fixtures/sudoku_almost.txt',
+        presenter: @MockPresenter
+      )
+    end
+  end
+end
