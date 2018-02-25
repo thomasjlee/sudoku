@@ -1,4 +1,4 @@
-require_relative '../sudoku'
+require_relative '../src/game'
 require 'minitest/autorun'
 require 'minitest/reporters'
 Minitest::Reporters.use!
