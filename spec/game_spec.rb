@@ -55,7 +55,4 @@ RSpec.describe Game, "#initialize" do
     end
   end
 
-  # if initialized with guesses, it tries the guesses before calling play_game
-
-  # if initialized without guesses, it does not call try_guesses
 end

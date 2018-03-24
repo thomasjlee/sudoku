@@ -6,34 +6,15 @@ require_relative './src/board'
 class Game
   attr_accessor :board, :presenter
 
-  def initialize(file: nil, presenter: Presenter.new, guesses: [])
+  def initialize(file: nil, presenter: Presenter.new)
     return presenter.start_prompt if file.nil?
 
     @board = Board.new(file, presenter)
     @presenter = presenter
-
-    if guesses.empty?
-      play_game
-    else
-      try_guesses(guesses)
-      play_game
-    end
+    play_game
   end
 
   private
-
-    def try_guesses(guesses)
-      guesses.each do |x_y_tile|
-        x    = x_y_tile[0]
-        y    = x_y_tile[1]
-        tile = x_y_tile[2]
-
-        if (presenter.is_valid_coord?(x) && presenter.is_valid_coord?(y) && presenter.is_valid_tile?(tile))
-          board.update(x, y, tile)
-        end
-      end
-    end
-
     def play_game
       until board.all_solved?
         presenter.render(board.grid)
@@ -58,6 +39,3 @@ end
 
 ## Run with sudoku1-almost.txt
 # ruby -w -I. -rgame -e "Game.new file: './puzzles/sudoku1-almost.txt'"
-
-## Run with sudoku1-almost.txt and winning guess
-# ruby -w -I. -rgame -e "Game.new file: './puzzles/sudoku1-almost.txt', guesses: [[0, 8, 4]]"
