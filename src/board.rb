@@ -45,7 +45,7 @@ class Board
     solved = false
     grid.each do |row|
       tile_row = row.map { |tile_obj| tile_obj.tile.to_i }
-      solved = (!tile_row.include?(0) && (tile_row == tile_row.uniq)) ? true : false
+      solved = (!tile_row.include?(0) && (tile_row == tile_row.uniq))
       return nil if !solved
     end
     solved
@@ -56,7 +56,7 @@ class Board
     i = 0
     while i < 9
       tile_column = grid.map { |arr| arr[i].tile.to_i }
-      solved = !tile_column.include?(0) && (tile_column == tile_column.uniq) ? true : false
+      solved = !tile_column.include?(0) && (tile_column == tile_column.uniq)
       return nil if !solved
       i += 1
     end
@@ -76,7 +76,7 @@ class Board
           end
         end
         j += 3
-        solved = !square.include?(0) && (square == square.uniq) ? true : false
+        solved = !square.include?(0) && (square == square.uniq)
         return nil if !solved
       end
       i += 3

@@ -7,51 +7,49 @@ class Game
   attr_accessor :board, :presenter
 
   def initialize(file: nil, presenter: Presenter.new, guesses: [])
-    if file.nil?
-      presenter.start_prompt
-    else
-      @board = Board.new(file, presenter)
-      @presenter = presenter
+    return presenter.start_prompt if file.nil?
 
-      if guesses.empty?
-        play_game
-      else
-        try_guesses(guesses)
-        play_game
-      end
+    @board = Board.new(file, presenter)
+    @presenter = presenter
+
+    if guesses.empty?
+      play_game
+    else
+      try_guesses(guesses)
+      play_game
     end
   end
 
   private
 
-  def try_guesses(guesses)
-    guesses.each do |x_y_tile|
-      x    = x_y_tile[0]
-      y    = x_y_tile[1]
-      tile = x_y_tile[2]
+    def try_guesses(guesses)
+      guesses.each do |x_y_tile|
+        x    = x_y_tile[0]
+        y    = x_y_tile[1]
+        tile = x_y_tile[2]
 
-      if (presenter.is_valid_coord?(x) && presenter.is_valid_coord?(y) && presenter.is_valid_tile?(tile))
-        board.update(x, y, tile)
+        if (presenter.is_valid_coord?(x) && presenter.is_valid_coord?(y) && presenter.is_valid_tile?(tile))
+          board.update(x, y, tile)
+        end
       end
     end
-  end
 
-  def play_game
-    until board.all_solved?
-      presenter.render(board.grid)
-      x = presenter.prompt_x
-      y = presenter.prompt_y
-      value = presenter.prompt_tile_value.to_s
-      board.update(x, y, value)
+    def play_game
+      until board.all_solved?
+        presenter.render(board.grid)
+        x = presenter.prompt_x
+        y = presenter.prompt_y
+        value = presenter.prompt_tile_value.to_s
+        board.update(x, y, value)
+      end
+
+      end_game
     end
 
-    end_game
-  end
-
-  def end_game
-    presenter.render(board.grid)
-    presenter.win_msg
-  end
+    def end_game
+      presenter.render(board.grid)
+      presenter.win_msg
+    end
 end
 
 if $0 == __FILE__ then

@@ -1,5 +1,3 @@
-require 'byebug'
-
 class Presenter
   def start_prompt
     puts "=== SUDOKU ==="
@@ -12,7 +10,6 @@ class Presenter
     puts ""
     print "Choose a puzzle. Type in the complete file name: "
     file = gets.chomp
-    puts "!!!!!!!!! ./puzzles/#{file}"
     Game.new(file: "./puzzles/#{file}", presenter: Presenter.new)
   end
 
