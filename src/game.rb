@@ -1,14 +1,13 @@
 require 'colorize'
-require_relative './src/tile'
-require_relative './src/presenter'
-require_relative './src/board'
+require_relative 'tile'
+require_relative 'presenter'
+require_relative 'board'
 
 class Game
   attr_accessor :board, :presenter
 
   def initialize(file: nil, presenter: Presenter.new)
     return presenter.start_prompt if file.nil?
-
     @board = Board.new(file, presenter)
     @presenter = presenter
     play_game
@@ -18,12 +17,11 @@ class Game
     def play_game
       until board.all_solved?
         presenter.render(board.grid)
-        x = presenter.prompt_x
-        y = presenter.prompt_y
+        x     = presenter.prompt_x
+        y     = presenter.prompt_y
         value = presenter.prompt_tile_value.to_s
         board.update(x, y, value)
       end
-
       end_game
     end
 

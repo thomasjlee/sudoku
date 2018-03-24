@@ -4,8 +4,7 @@ class Board
 
   def initialize(file, presenter)
     @presenter = presenter
-    @grid = []
-
+    @grid      = []
     set_grid(file)
   end
 
@@ -16,7 +15,6 @@ class Board
         line.chomp.chars.each do |tile|
           tile_row << Tile.new(tile, presenter)
         end
-
         grid << tile_row
       end
     end
@@ -25,7 +23,6 @@ class Board
   def update(x, y, new_value)
     y = (y - 8).abs
     grid[y][x].tile = new_value.to_s
-
     if full_board?
       if !all_solved?
         presenter.unsolved_full_msg
